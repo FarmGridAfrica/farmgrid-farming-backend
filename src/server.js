@@ -1,9 +1,10 @@
 import express from "express";
 import path from "path";
 import dotenv from "dotenv";
-import connectDB from "./config/db.js";
+import connectDB from "./database/db.js";
 import colors from "colors";
 import morgan from "morgan";
+import swaggerUI from "swagger-ui-express";
 
 // const color = require('color');
 
@@ -14,7 +15,8 @@ dotenv.config();
 connectDB();
 
 //Routes files
-import users from "./routes/register.js";
+import users from "./server/routes/register.js";
+import products from "./server/routes/product.js";
 
 const app = express();
 
@@ -27,7 +29,11 @@ if (process.env.NODE_ENV === "development") {
 app.use(express.json());
 
 //Mount routers
-app.use("/api/v1/users", users);
+app.use("/api/v1/auth", users);
+app.use("/api/v1/product", products);
+
+//Swagger
+// app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(docs));
 
 const PORT = process.env.PORT || 5000;
 
