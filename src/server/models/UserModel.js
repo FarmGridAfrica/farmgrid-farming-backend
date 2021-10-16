@@ -68,7 +68,7 @@ const UserSchema = mongoose.Schema({
 
 UserSchema.pre(/^(save)/, function () {
   let self = this;
-  self.referralLink = process.env.WEBSITE_URL + `?refId=${self._id}`;
+  self.referralLink = `?refId=${self._id}`;
 });
 
 UserSchema.methods.matchPassword = async function (enteredPassword) {

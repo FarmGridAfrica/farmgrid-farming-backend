@@ -43,7 +43,7 @@ export async function register(req, res, next) {
       await referralUser.save();
     }
 
-    const referralLink = process.env.WEBSITE_URL + `?refId=${user._id}`;
+    const referralLink = `?refId=${user._id}`;
 
     return res.status(SUCCESS).json({
       message: "Successfully registered",

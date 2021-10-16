@@ -5,6 +5,7 @@ import connectDB from "./database/db.js";
 import colors from "colors";
 import morgan from "morgan";
 import swaggerUI from "swagger-ui-express";
+import cors from "cors";
 
 // const color = require('color');
 
@@ -19,6 +20,14 @@ import users from "./server/routes/register.js";
 import products from "./server/routes/product.js";
 
 const app = express();
+
+const corsOptions = {
+  origin: "*",
+  credentials: true, //access-control-allow-credentials:true
+  optionSuccessStatus: 200,
+};
+
+app.use(cors(corsOptions)); // Use this after the variable declaration
 
 // Dev logging middleware
 if (process.env.NODE_ENV === "development") {
