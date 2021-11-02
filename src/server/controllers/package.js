@@ -1,4 +1,4 @@
-import Product from "../models/ProductModel.js";
+import Package from "../models/PackageModel.js";
 import {
   BAD_REQUEST,
   NOT_FOUND,
@@ -12,37 +12,60 @@ import {
   DELETED_SUCCESSFUL,
 } from "../types/statusMessge.js";
 
-export async function createProduct(req, res, next) {
+export async function createPackage(req, res, next) {
   try {
-    const { productName, photo, description } = req.body;
+    const {
+      packageName,
+      photo,
+      description,
+      Products,
+      returnOfInvestment,
+      amount,
+      startDate,
+      endDate,
+    } = req.body;
 
-    if (!productName || !description || !photo) {
+    if (
+      !packageName ||
+      !description ||
+      !photo ||
+      !Products ||
+      !returnOfInvestment ||
+      !amount ||
+      !startDate ||
+      !endDate
+    ) {
       return res.status(BAD_REQUEST).json({
         message:
-          "Please provide all field values( product name, description and photo)",
+          "Please provide all field values( Package name, description and photo)",
       });
     }
 
-    const product = await Product.create({
-      productName,
+    const newPackage = await Package.create({
+      packageName,
       photo,
       description,
+      Products,
+      returnOfInvestment,
+      amount,
+      startDate,
+      endDate,
     });
 
     return res.status(SUCCESS).json({
-      message: "Product created successfully",
-      product,
+      message: "Package created successfully",
+      newPackage,
     });
   } catch (error) {
     return res.status(SERVER_ERROR).json({ message: error.message });
   }
 }
 
-export async function updateProduct(req, res, next) {
+export async function updatePackage(req, res, next) {
   try {
     const { ...rest } = req.body;
-    const { productId } = req.params;
-    const response = await Product.findByIdAndUpdate(productId, {
+    const { packageId } = req.params;
+    const response = await Product.findByIdAndUpdate(packageId, {
       $set: {
         ...rest,
       },
@@ -57,42 +80,42 @@ export async function updateProduct(req, res, next) {
   }
 }
 
-export async function getProducts(req, res, next) {
+export async function getPackages(req, res, next) {
   try {
-    const response = await Product.find();
+    const response = await Package.find();
 
     if (!response)
       return res.status(BAD_REQUEST).json({ message: ITEM_NOT_FOUND });
 
     return res
       .status(SUCCESS)
-      .json({ message: FETCHED_SUCCESSFUL, products: response });
+      .json({ message: FETCHED_SUCCESSFUL, package: response });
   } catch (error) {
     return res.status(SERVER_ERROR).json({ message: error.message });
   }
 }
 
-export async function getSingleProduct(req, res, next) {
+export async function getSinglePackage(req, res, next) {
   try {
-    const { productId } = req.params;
+    const { packageId } = req.params;
 
-    const response = await Product.findById(productId);
+    const response = await Package.findById(packageId);
 
     if (!response)
       return res.status(BAD_REQUEST).json({ message: ITEM_NOT_FOUND });
 
     return res
       .status(SUCCESS)
-      .json({ message: FETCHED_SUCCESSFUL, product: response });
+      .json({ message: FETCHED_SUCCESSFUL, package: response });
   } catch (error) {
     return res.status(SERVER_ERROR).json({ message: error.message });
   }
 }
 
-export async function deleteSingleProduct(req, res, next) {
+export async function deleteSinglePackage(req, res, next) {
   try {
-    const { productId } = req.params;
-    const response = await Product.findByIdAndDelete(productId);
+    const { packageId } = req.params;
+    const response = await Package.findByIdAndDelete(packageId);
     if (!response)
       return res.status(BAD_REQUEST).json({ message: ITEM_NOT_FOUND });
 

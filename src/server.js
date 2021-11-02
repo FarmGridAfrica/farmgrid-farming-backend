@@ -18,6 +18,7 @@ connectDB();
 //Routes files
 import users from "./server/routes/register.js";
 import products from "./server/routes/product.js";
+import packages from "./server/routes/package.js";
 
 const app = express();
 
@@ -40,6 +41,7 @@ app.use(express.json());
 //Mount routers
 app.use("/api/v1/auth", users);
 app.use("/api/v1/product", products);
+app.use("/api/v1/package", packages);
 
 //Swagger
 // app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(docs));
