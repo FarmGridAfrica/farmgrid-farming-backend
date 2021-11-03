@@ -1,8 +1,8 @@
 import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
 
-const GridPackageSchema = mongoose.Schema({
-  gridpackageName: {
+const PlanSchema = mongoose.Schema({
+  planName: {
     type: String,
     required: false,
   },
@@ -16,9 +16,11 @@ const GridPackageSchema = mongoose.Schema({
   },
   products: [
     {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Product",
-      required: true,
+      product: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Product",
+        required: true,
+      },
     },
   ],
   startDate: {
@@ -27,9 +29,9 @@ const GridPackageSchema = mongoose.Schema({
   endDate: {
     type: Date,
   },
-  // duration: {
-
-  // },
+  duration: {
+    type: Number,
+  },
   returnOfInvestment: {
     type: String,
   },
@@ -42,10 +44,13 @@ const GridPackageSchema = mongoose.Schema({
   },
 });
 
-GridPackageSchema.pre(/^(save)/, function () {
+PlanSchema.pre(/^(save)/, function () {
   let self = this;
-  //function to calculate duration from startDate and endDate
+  const startDate = self.startDate;
+  const endDate = self.endDate;
+  const diffTime = Math.abs(endDate - startDate);
+  self.duration = diffTime;
 });
 
-const GridPackage = mongoose.model("GridPackage", GridPackageSchema);
-export default GridPackage;
+const Plan = mongoose.model("Plan", PlanSchema);
+export default Plan;

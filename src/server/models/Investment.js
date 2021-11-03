@@ -6,9 +6,9 @@ const InvestmentSchema = mongoose.Schema({
     ref: "User",
     required: true,
   },
-  gridpackage: {
+  plan: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "GridPackage",
+    ref: "Plan",
     required: true,
   },
   active: {
@@ -25,6 +25,7 @@ const InvestmentSchema = mongoose.Schema({
   endDate: {
     type: Date,
   },
+  // returnOfInvestment: {},
   createdAt: {
     type: Date,
     default: Date.now,

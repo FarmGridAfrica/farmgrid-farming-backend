@@ -15,17 +15,17 @@ import {
 
 export async function createInvestment(req, res, next) {
   try {
-    const { user, gridGridPackage } = req.body;
+    const { user, plan } = req.body;
 
-    if (!user || !gridGridPackage) {
+    if (!user || !plan) {
       return res.status(BAD_REQUEST).json({
-        message: "Please provide all field values( user and gridpackage)",
+        message: "Please provide all field values( user and plan)",
       });
     }
 
     const investment = await Investment.create({
       user,
-      gridGridPackage,
+      plan,
     });
 
     return res.status(SUCCESS).json({
@@ -58,7 +58,10 @@ export async function updateInvestment(req, res, next) {
 
 export async function getInvestments(req, res, next) {
   try {
-    const response = await Investment.find();
+    const response = await Investment.find()
+      .populate("plan")
+      .populate("user")
+      .exec();
 
     if (!response)
       return res.status(BAD_REQUEST).json({ message: ITEM_NOT_FOUND });
@@ -73,7 +76,7 @@ export async function getUserInvestments(req, res, next) {
   try {
     const user = getUserFromToken(req);
 
-    const response = await Investment.find({ user: user._id });
+    const response = await Investment.find({ user: user._id }).populate("plan");
 
     if (!response)
       return res.status(BAD_REQUEST).json({ message: ITEM_NOT_FOUND });
@@ -88,7 +91,10 @@ export async function getSingleInvestment(req, res, next) {
   try {
     const { investmentId } = req.params;
 
-    const response = await Investment.findById(investmentId);
+    const response = await Investment.findById(investmentId)
+      .populate("plan")
+      .populate("user")
+      .exec();
 
     if (!response)
       return res.status(BAD_REQUEST).json({ message: ITEM_NOT_FOUND });

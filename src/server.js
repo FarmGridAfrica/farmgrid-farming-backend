@@ -19,8 +19,9 @@ connectDB();
 //Routes files
 import users from "./server/routes/register.js";
 import products from "./server/routes/product.js";
-import gridpackages from "./server/routes/gridpackage.js";
-import investment from "./server/routes/investment.js";
+import plans from "./server/routes/plan.js";
+import investments from "./server/routes/investment.js";
+import admins from "./server/routes/admin.js";
 
 const app = express();
 
@@ -43,7 +44,9 @@ app.use(express.json());
 //Mount routers
 app.use("/api/v1/auth", users);
 app.use("/api/v1/product", products);
-app.use("/api/v1/gridpackage", gridpackages);
+app.use("/api/v1/plan", plans);
+app.use("/api/v1/investment", investments);
+app.use("/api/v1/admin", admins);
 
 // Swagger
 app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(docs));

@@ -59,6 +59,11 @@ export async function login(req, res, next) {
   try {
     const { email, password } = req.body;
 
+    //function to check if email exist
+    // if(email !== "email@mail.com"){
+
+    // }
+
     if (!email || !password) {
       return res
         .status(BAD_REQUEST)
