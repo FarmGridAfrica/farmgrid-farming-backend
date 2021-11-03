@@ -1,4 +1,4 @@
-import Package from "../models/PackageModel.js";
+import GridPackage from "../models/GridPackageModel.js";
 import {
   BAD_REQUEST,
   NOT_FOUND,
@@ -12,10 +12,10 @@ import {
   DELETED_SUCCESSFUL,
 } from "../types/statusMessge.js";
 
-export async function createPackage(req, res, next) {
+export async function createGridPackage(req, res, next) {
   try {
     const {
-      packageName,
+      gridpackageName,
       photo,
       description,
       Products,
@@ -26,7 +26,7 @@ export async function createPackage(req, res, next) {
     } = req.body;
 
     if (
-      !packageName ||
+      !gridpackageName ||
       !description ||
       !photo ||
       !Products ||
@@ -37,12 +37,12 @@ export async function createPackage(req, res, next) {
     ) {
       return res.status(BAD_REQUEST).json({
         message:
-          "Please provide all field values( Package name, description and photo)",
+          "Please provide all field values( GridPackage name, description and photo)",
       });
     }
 
-    const newPackage = await Package.create({
-      packageName,
+    const newGridPackage = await GridPackage.create({
+      gridpackageName,
       photo,
       description,
       Products,
@@ -53,19 +53,19 @@ export async function createPackage(req, res, next) {
     });
 
     return res.status(SUCCESS).json({
-      message: "Package created successfully",
-      newPackage,
+      message: "GridPackage created successfully",
+      newGridPackage,
     });
   } catch (error) {
     return res.status(SERVER_ERROR).json({ message: error.message });
   }
 }
 
-export async function updatePackage(req, res, next) {
+export async function updateGridPackage(req, res, next) {
   try {
     const { ...rest } = req.body;
-    const { packageId } = req.params;
-    const response = await Product.findByIdAndUpdate(packageId, {
+    const { gridPackageId } = req.params;
+    const response = await Product.findByIdAndUpdate(gridPackageId, {
       $set: {
         ...rest,
       },
@@ -80,42 +80,42 @@ export async function updatePackage(req, res, next) {
   }
 }
 
-export async function getPackages(req, res, next) {
+export async function getGridPackages(req, res, next) {
   try {
-    const response = await Package.find();
+    const response = await GridPackage.find();
 
     if (!response)
       return res.status(BAD_REQUEST).json({ message: ITEM_NOT_FOUND });
 
     return res
       .status(SUCCESS)
-      .json({ message: FETCHED_SUCCESSFUL, package: response });
+      .json({ message: FETCHED_SUCCESSFUL, gridpackage: response });
   } catch (error) {
     return res.status(SERVER_ERROR).json({ message: error.message });
   }
 }
 
-export async function getSinglePackage(req, res, next) {
+export async function getSingleGridPackage(req, res, next) {
   try {
-    const { packageId } = req.params;
+    const { gridPackageId } = req.params;
 
-    const response = await Package.findById(packageId);
+    const response = await GridPackage.findById(gridPackageId);
 
     if (!response)
       return res.status(BAD_REQUEST).json({ message: ITEM_NOT_FOUND });
 
     return res
       .status(SUCCESS)
-      .json({ message: FETCHED_SUCCESSFUL, package: response });
+      .json({ message: FETCHED_SUCCESSFUL, gridpackage: response });
   } catch (error) {
     return res.status(SERVER_ERROR).json({ message: error.message });
   }
 }
 
-export async function deleteSinglePackage(req, res, next) {
+export async function deleteSingleGridPackage(req, res, next) {
   try {
-    const { packageId } = req.params;
-    const response = await Package.findByIdAndDelete(packageId);
+    const { gridPackageId } = req.params;
+    const response = await GridPackage.findByIdAndDelete(gridPackageId);
     if (!response)
       return res.status(BAD_REQUEST).json({ message: ITEM_NOT_FOUND });
 

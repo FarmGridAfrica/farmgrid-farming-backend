@@ -6,6 +6,7 @@ import colors from "colors";
 import morgan from "morgan";
 import swaggerUI from "swagger-ui-express";
 import cors from "cors";
+import docs from "./docs/index.js";
 
 // const color = require('color');
 
@@ -18,7 +19,8 @@ connectDB();
 //Routes files
 import users from "./server/routes/register.js";
 import products from "./server/routes/product.js";
-import packages from "./server/routes/package.js";
+import gridpackages from "./server/routes/gridpackage.js";
+import investment from "./server/routes/investment.js";
 
 const app = express();
 
@@ -41,10 +43,10 @@ app.use(express.json());
 //Mount routers
 app.use("/api/v1/auth", users);
 app.use("/api/v1/product", products);
-app.use("/api/v1/package", packages);
+app.use("/api/v1/gridpackage", gridpackages);
 
-//Swagger
-// app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(docs));
+// Swagger
+app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(docs));
 
 const PORT = process.env.PORT || 5000;
 
