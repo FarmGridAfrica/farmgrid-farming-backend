@@ -7,9 +7,11 @@ import {
   getAllReferrals,
   getReferralLink,
   login,
+  signUp,
 } from "../controllers/auth.js";
 
 router.post("/register", [userUniqueSchemaValueExist], register);
+router.post("/signup", signUp);
 router.post("/login", login);
 router.get("/users", getAllReferrals);
 router.post("/referral", getReferralLink);

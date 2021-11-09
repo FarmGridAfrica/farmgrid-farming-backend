@@ -55,6 +55,61 @@ export async function register(req, res, next) {
   }
 }
 
+export async function signUp(req, res, next) {
+  try {
+    const {
+      firstName,
+      lastName,
+      accountNumber,
+      country,
+      email,
+      password,
+      ...rest
+    } = req.body;
+
+    if (
+      !firstName ||
+      !lastName ||
+      !accountNumber ||
+      !country ||
+      !email ||
+      !password
+    ) {
+      return res.status(BAD_REQUEST).json({
+        message: "Please provide all field values",
+      });
+    }
+
+    if (email !== "email@mail.com") {
+      const user = await User.findOne({ email });
+      if (user) {
+        return res.status(BAD_REQUEST).json({ message: "User already exist" });
+      }
+    }
+
+    // Create user
+    const user = await User.create({
+      firstName,
+      lastName,
+      accountNumber,
+      country,
+      email,
+      password,
+      ...rest,
+    });
+
+    const token = generateToken(user);
+
+    return res.status(SUCCESS).json({
+      message: "Successfully registered",
+      token,
+      user,
+    });
+  } catch (error) {
+    return res.status(SERVER_ERROR).json({ message: error.message });
+  }
+}
+
 export async function login(req, res, next) {
   try {
     const { email, password } = req.body;

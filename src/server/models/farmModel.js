@@ -1,8 +1,8 @@
 import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
 
-const PlanSchema = mongoose.Schema({
-  planName: {
+const FarmSchema = mongoose.Schema({
+  farmName: {
     type: String,
     required: false,
   },
@@ -14,15 +14,6 @@ const PlanSchema = mongoose.Schema({
     type: String,
     required: false,
   },
-  products: [
-    {
-      product: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Product",
-        required: true,
-      },
-    },
-  ],
   startDate: {
     type: Date,
   },
@@ -33,7 +24,7 @@ const PlanSchema = mongoose.Schema({
     type: Number,
   },
   returnOfInvestment: {
-    type: String,
+    type: Number,
   },
   amount: {
     type: Number,
@@ -44,7 +35,7 @@ const PlanSchema = mongoose.Schema({
   },
 });
 
-PlanSchema.pre(/^(save)/, function () {
+FarmSchema.pre(/^(save)/, function () {
   let self = this;
   const startDate = self.startDate;
   const endDate = self.endDate;
@@ -52,5 +43,5 @@ PlanSchema.pre(/^(save)/, function () {
   self.duration = diffTime;
 });
 
-const Plan = mongoose.model("Plan", PlanSchema);
-export default Plan;
+const Farm = mongoose.model("Farm", FarmSchema);
+export default Farm;

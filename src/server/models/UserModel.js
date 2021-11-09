@@ -10,6 +10,14 @@ const UserSchema = mongoose.Schema({
     type: String,
     required: false,
   },
+  accountNumber: {
+    type: Number,
+    required: false,
+  },
+  country: {
+    type: String,
+    required: false,
+  },
   email: {
     type: String,
     required: false,
@@ -20,10 +28,6 @@ const UserSchema = mongoose.Schema({
       },
       message: "Please enter a valid email",
     },
-  },
-  phone: {
-    type: String,
-    required: false,
   },
   password: {
     type: String,

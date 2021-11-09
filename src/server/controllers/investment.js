@@ -1,5 +1,5 @@
 import { getUserFromToken } from "../../utils/jsonWebToken.js";
-import Investment from "../models/Investment.js";
+import Investment from "../models/InvestmentModel.js";
 import {
   BAD_REQUEST,
   NOT_FOUND,
@@ -15,17 +15,17 @@ import {
 
 export async function createInvestment(req, res, next) {
   try {
-    const { user, plan } = req.body;
+    const { user, farm } = req.body;
 
-    if (!user || !plan) {
+    if (!user || !farm) {
       return res.status(BAD_REQUEST).json({
-        message: "Please provide all field values( user and plan)",
+        message: "Please provide all field values",
       });
     }
 
     const investment = await Investment.create({
       user,
-      plan,
+      farm,
     });
 
     return res.status(SUCCESS).json({
@@ -58,15 +58,17 @@ export async function updateInvestment(req, res, next) {
 
 export async function getInvestments(req, res, next) {
   try {
-    const response = await Investment.find()
-      .populate("plan")
+    const investments = await Investment.find()
+      .populate("farm")
       .populate("user")
       .exec();
 
-    if (!response)
+    if (!investments)
       return res.status(BAD_REQUEST).json({ message: ITEM_NOT_FOUND });
 
-    return res.status(SUCCESS).json({ message: FETCHED_SUCCESSFUL, response });
+    return res
+      .status(SUCCESS)
+      .json({ message: FETCHED_SUCCESSFUL, investments });
   } catch (error) {
     return res.status(SERVER_ERROR).json({ message: error.message });
   }
@@ -76,12 +78,16 @@ export async function getUserInvestments(req, res, next) {
   try {
     const user = getUserFromToken(req);
 
-    const response = await Investment.find({ user: user._id }).populate("plan");
+    const investments = await Investment.find({ user: user._id }).populate(
+      "farm"
+    );
 
-    if (!response)
+    if (!investments)
       return res.status(BAD_REQUEST).json({ message: ITEM_NOT_FOUND });
 
-    return res.status(SUCCESS).json({ message: FETCHED_SUCCESSFUL, response });
+    return res
+      .status(SUCCESS)
+      .json({ message: FETCHED_SUCCESSFUL, investments });
   } catch (error) {
     return res.status(SERVER_ERROR).json({ message: error.message });
   }
@@ -91,15 +97,17 @@ export async function getSingleInvestment(req, res, next) {
   try {
     const { investmentId } = req.params;
 
-    const response = await Investment.findById(investmentId)
-      .populate("plan")
+    const investment = await Investment.findById(investmentId)
+      .populate("farm")
       .populate("user")
       .exec();
 
-    if (!response)
+    if (!investment)
       return res.status(BAD_REQUEST).json({ message: ITEM_NOT_FOUND });
 
-    return res.status(SUCCESS).json({ message: FETCHED_SUCCESSFUL, response });
+    return res
+      .status(SUCCESS)
+      .json({ message: FETCHED_SUCCESSFUL, investment });
   } catch (error) {
     return res.status(SERVER_ERROR).json({ message: error.message });
   }

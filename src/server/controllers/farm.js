@@ -1,4 +1,4 @@
-import Plan from "../models/PlanModel.js";
+import Farm from "../models/FarmModel.js";
 import {
   BAD_REQUEST,
   NOT_FOUND,
@@ -12,24 +12,32 @@ import {
   DELETED_SUCCESSFUL,
 } from "../types/statusMessge.js";
 
-export async function createPlan(req, res, next) {
+export async function createFarm(req, res, next) {
   try {
     const {
-      planName,
+      farmName,
       photo,
       description,
-      products,
       returnOfInvestment,
       amount,
       startDate,
       endDate,
     } = req.body;
 
+    console.log({
+      farmName,
+      photo,
+      description,
+      returnOfInvestment,
+      amount,
+      startDate,
+      endDate,
+    });
+
     if (
-      !planName ||
+      !farmName ||
       !description ||
       !photo ||
-      !products ||
       !returnOfInvestment ||
       !amount ||
       !startDate ||
@@ -37,35 +45,34 @@ export async function createPlan(req, res, next) {
     ) {
       return res.status(BAD_REQUEST).json({
         message:
-          "Please provide all field values( Plan name, description and photo)",
+          "Please provide all field values( Farm name, description and photo)",
       });
     }
 
-    const newPlan = await Plan.create({
-      planName,
+    const farm = await Farm.create({
+      farmName,
       photo,
       description,
       returnOfInvestment,
-      products,
       amount,
       startDate,
       endDate,
     });
 
     return res.status(SUCCESS).json({
-      message: "Plan created successfully",
-      newPlan,
+      message: "Farm created successfully",
+      farm,
     });
   } catch (error) {
     return res.status(SERVER_ERROR).json({ message: error.message });
   }
 }
 
-export async function updatePlan(req, res, next) {
+export async function updateFarm(req, res, next) {
   try {
     const { ...rest } = req.body;
-    const { planId } = req.params;
-    const response = await Plan.findByIdAndUpdate(planId, {
+    const { farmId } = req.params;
+    const response = await Farm.findByIdAndUpdate(farmId, {
       $set: {
         ...rest,
       },
@@ -80,42 +87,54 @@ export async function updatePlan(req, res, next) {
   }
 }
 
-export async function getPlans(req, res, next) {
+export async function getFarms(req, res, next) {
   try {
-    const response = await Plan.find().populate("products.product");
+    const response = await Farm.find();
 
     if (!response)
       return res.status(BAD_REQUEST).json({ message: ITEM_NOT_FOUND });
 
     return res
       .status(SUCCESS)
-      .json({ message: FETCHED_SUCCESSFUL, plan: response });
+      .json({ message: FETCHED_SUCCESSFUL, farms: response });
   } catch (error) {
     return res.status(SERVER_ERROR).json({ message: error.message });
   }
 }
 
-export async function getSinglePlan(req, res, next) {
+export async function getSingleFarm(req, res, next) {
   try {
-    const { planId } = req.params;
+    const { farmId } = req.params;
 
-    const response = await Plan.findById(planId).populate("products.product");
+    const response = await Farm.findById(farmId);
 
     if (!response)
       return res.status(BAD_REQUEST).json({ message: ITEM_NOT_FOUND });
 
     return res
       .status(SUCCESS)
-      .json({ message: FETCHED_SUCCESSFUL, plan: response });
+      .json({ message: FETCHED_SUCCESSFUL, farm: response });
   } catch (error) {
     return res.status(SERVER_ERROR).json({ message: error.message });
   }
 }
 
-export async function deleteSinglePlan(req, res, next) {
+export async function deleteSingleFarm(req, res, next) {
   try {
-    const { planId } = req.params;
-    const response = await Plan.findByIdAndDelete(planId);
+    const { farmId } = req.params;
+    const response = await Farm.findByIdAndDelete(farmId);
+    if (!response)
+      return res.status(BAD_REQUEST).json({ message: ITEM_NOT_FOUND });
+
+    return res.status(SUCCESS).json({ message: DELETED_SUCCESSFUL });
+  } catch (error) {
+    return res.status(SERVER_ERROR).json({ message: error.message });
+  }
+}
+export async function deleteFarms(req, res, next) {
+  try {
+    const response = await Farm.deleteMany();
+
     if (!response)
       return res.status(BAD_REQUEST).json({ message: ITEM_NOT_FOUND });
 

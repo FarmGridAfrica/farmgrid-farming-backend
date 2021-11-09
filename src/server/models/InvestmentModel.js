@@ -6,14 +6,15 @@ const InvestmentSchema = mongoose.Schema({
     ref: "User",
     required: true,
   },
-  plan: {
+  farm: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Plan",
+    ref: "Farm",
     required: true,
   },
-  active: {
-    type: Boolean,
-    default: false,
+  status: {
+    type: String,
+    enum: ["Pending", "Active", "Completed"],
+    default: "Pending",
   },
   maturityStatus: {
     type: Boolean,
