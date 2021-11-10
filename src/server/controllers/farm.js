@@ -19,6 +19,7 @@ export async function createFarm(req, res, next) {
       photo,
       description,
       returnOfInvestment,
+      country,
       amount,
       startDate,
       endDate,
@@ -29,6 +30,7 @@ export async function createFarm(req, res, next) {
       photo,
       description,
       returnOfInvestment,
+      country,
       amount,
       startDate,
       endDate,
@@ -38,6 +40,7 @@ export async function createFarm(req, res, next) {
       !farmName ||
       !description ||
       !photo ||
+      !country ||
       !returnOfInvestment ||
       !amount ||
       !startDate ||
@@ -53,6 +56,7 @@ export async function createFarm(req, res, next) {
       farmName,
       photo,
       description,
+      country,
       returnOfInvestment,
       amount,
       startDate,

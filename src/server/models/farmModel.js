@@ -14,6 +14,10 @@ const FarmSchema = mongoose.Schema({
     type: String,
     required: false,
   },
+  country: {
+    type: String,
+    required: false,
+  },
   startDate: {
     type: Date,
   },

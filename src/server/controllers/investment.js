@@ -15,9 +15,9 @@ import {
 
 export async function createInvestment(req, res, next) {
   try {
-    const { user, farm } = req.body;
+    const { user, farm, unit } = req.body;
 
-    if (!user || !farm) {
+    if (!user || !farm || !unit) {
       return res.status(BAD_REQUEST).json({
         message: "Please provide all field values",
       });
@@ -26,6 +26,7 @@ export async function createInvestment(req, res, next) {
     const investment = await Investment.create({
       user,
       farm,
+      unit,
     });
 
     return res.status(SUCCESS).json({
