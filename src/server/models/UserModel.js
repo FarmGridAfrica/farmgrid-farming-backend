@@ -14,6 +14,10 @@ const UserSchema = mongoose.Schema({
     type: Number,
     required: false,
   },
+  bankName: {
+    type: String,
+    required: false,
+  },
   country: {
     type: String,
     required: false,

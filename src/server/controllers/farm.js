@@ -18,22 +18,24 @@ export async function createFarm(req, res, next) {
       farmName,
       photo,
       description,
-      returnOfInvestment,
+      annualPercentageYield,
       country,
       amount,
       startDate,
       endDate,
+      duration,
     } = req.body;
 
     console.log({
       farmName,
       photo,
       description,
-      returnOfInvestment,
+      annualPercentageYield,
       country,
       amount,
       startDate,
       endDate,
+      duration,
     });
 
     if (
@@ -41,10 +43,11 @@ export async function createFarm(req, res, next) {
       !description ||
       !photo ||
       !country ||
-      !returnOfInvestment ||
+      !annualPercentageYield ||
       !amount ||
       !startDate ||
-      !endDate
+      !endDate ||
+      !duration
     ) {
       return res.status(BAD_REQUEST).json({
         message:
@@ -57,10 +60,11 @@ export async function createFarm(req, res, next) {
       photo,
       description,
       country,
-      returnOfInvestment,
+      annualPercentageYield,
       amount,
       startDate,
       endDate,
+      duration,
     });
 
     return res.status(SUCCESS).json({

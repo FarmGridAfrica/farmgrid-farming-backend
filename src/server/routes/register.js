@@ -8,6 +8,7 @@ import {
   getReferralLink,
   login,
   signUp,
+  googleAuth,
 } from "../controllers/auth.js";
 
 router.post("/register", [userUniqueSchemaValueExist], register);
@@ -15,5 +16,6 @@ router.post("/signup", signUp);
 router.post("/login", login);
 router.get("/users", getAllReferrals);
 router.post("/referral", getReferralLink);
+router.post("/google/:id", googleAuth);
 
 export default router;

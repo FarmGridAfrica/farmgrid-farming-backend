@@ -27,7 +27,7 @@ const FarmSchema = mongoose.Schema({
   duration: {
     type: Number,
   },
-  returnOfInvestment: {
+  annualPercentageYield: {
     type: Number,
   },
   amount: {
@@ -37,14 +37,6 @@ const FarmSchema = mongoose.Schema({
     type: Date,
     default: Date.now,
   },
-});
-
-FarmSchema.pre(/^(save)/, function () {
-  let self = this;
-  const startDate = self.startDate;
-  const endDate = self.endDate;
-  const diffTime = Math.abs(endDate - startDate);
-  self.duration = diffTime;
 });
 
 const Farm = mongoose.model("Farm", FarmSchema);

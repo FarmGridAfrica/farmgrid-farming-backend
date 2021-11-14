@@ -6,6 +6,55 @@ import {
   SERVER_ERROR,
   SUCCESS,
 } from "../types/statusCode.js";
+import { OAuth2Client } from "google-auth-library";
+
+const client = new OAuth2Client(process.env.CLIENT_ID);
+
+export async function googleAuth(req, res, next) {
+  try {
+    const { id } = req.params;
+    const { accountNumber, country, bankName } = req.body;
+
+    const ticket = await client.verifyIdToken({
+      idToken: id,
+      audience: process.env.CLIENT_ID,
+    });
+
+    const { name, email } = ticket.getPayload();
+
+    if (!name || !accountNumber || !country || !email || !bankName) {
+      return res.status(BAD_REQUEST).json({
+        message: "Please provide all field values",
+      });
+    }
+
+    if (email !== "email@mail.com") {
+      const user = await User.findOne({ email });
+      if (user) {
+        return res.status(BAD_REQUEST).json({ message: "User already exist" });
+      }
+    }
+
+    // Create user
+    const user = await User.create({
+      firstName: name,
+      accountNumber,
+      country,
+      email,
+      bankName,
+    });
+
+    const token = generateToken(user);
+
+    return res.status(SUCCESS).json({
+      message: "Successfully registered",
+      token,
+      user,
+    });
+  } catch (error) {
+    return res.status(SERVER_ERROR).json({ message: error.message });
+  }
+}
 
 export async function register(req, res, next) {
   try {
@@ -64,6 +113,7 @@ export async function signUp(req, res, next) {
       country,
       email,
       password,
+      bankName,
       ...rest
     } = req.body;
 
@@ -73,7 +123,8 @@ export async function signUp(req, res, next) {
       !accountNumber ||
       !country ||
       !email ||
-      !password
+      !password ||
+      !bankName
     ) {
       return res.status(BAD_REQUEST).json({
         message: "Please provide all field values",
@@ -95,6 +146,7 @@ export async function signUp(req, res, next) {
       country,
       email,
       password,
+      bankName,
       ...rest,
     });
 
@@ -112,12 +164,29 @@ export async function signUp(req, res, next) {
 
 export async function login(req, res, next) {
   try {
+    const query = req.query;
+
+    const { id } = query;
+
     const { email, password } = req.body;
 
-    //function to check if email exist
-    // if(email !== "email@mail.com"){
+    if (id) {
+      const ticket = await client.verifyIdToken({
+        idToken: id,
+        audience: process.env.CLIENT_ID,
+      });
 
-    // }
+      const { email } = ticket.getPayload();
+
+      const user = await User.findOne({ email });
+
+      if (user) {
+        const token = generateToken(user);
+
+        return res.status(SUCCESS).json({ token, user });
+      }
+      return res.status(NOT_FOUND).json({ message: "User does not exist" });
+    }
 
     if (!email || !password) {
       return res
@@ -126,12 +195,6 @@ export async function login(req, res, next) {
     }
 
     const user = await User.findOne({ email });
-
-    // if (user == undefined) {
-    //   return res
-    //     .status(BAD_REQUEST)
-    //     .json({ message: "Username or password invalid" });
-    // }
 
     if (user) {
       const isPasswordValid = await user.matchPassword(password);
