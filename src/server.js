@@ -31,6 +31,8 @@ const app = express();
 
 const corsOptions = {
   origin: "*",
+  credentials: true, //access-control-allow-credentials:true
+  optionSuccessStatus: 200,
 };
 
 app.use(cors(corsOptions)); // Use this after the variable declaration
@@ -56,9 +58,7 @@ app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(docs));
 const PORT = process.env.PORT || 5000;
 
 //* SERVER */
-const httpServer = http.createServer(app);
-
-const server = httpServer.listen(
+const server = app.listen(
   PORT,
   console.log(
     `server running in ${process.env.NODE_ENV} mode on port ${PORT}`.yellow.bold
@@ -73,7 +73,7 @@ process.on("unhandledRejection", (err, promise) => {
   server.close(() => process.exit(1));
 });
 
-const io = new Server(httpServer, {
+const io = new Server(server, {
   cors: {
     origin: "*",
   },
