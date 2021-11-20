@@ -30,15 +30,12 @@ import admins from "./server/routes/admin.js";
 const app = express();
 
 const corsOptions = {
-  origin: "http://localhost:3000/",
+  origin: "*",
   credentials: true, //access-control-allow-credentials:true
   optionSuccessStatus: 200,
 };
 
-app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "*");
-  next();
-}); // Use this after the variable declaration
+app.use(cors(corsOptions)); // Use this after the variable declaration
 
 // Dev logging middleware
 if (process.env.NODE_ENV === "development") {
@@ -76,25 +73,25 @@ process.on("unhandledRejection", (err, promise) => {
   server.close(() => process.exit(1));
 });
 
-// const io = new Server(server, {
-//   cors: {
-//     origin: "*",
-//     credentials: true, //access-control-allow-credentials:true
-//     optionSuccessStatus: 200,
-//   },
-// });
+const io = new Server(server, {
+  cors: {
+    origin: "*",
+    credentials: true, //access-control-allow-credentials:true
+    optionSuccessStatus: 200,
+  },
+});
 
-// io.on("connection", (socket) => {
-//   socket.on("Withdrawal_request", async (data) => {
-//     const investment = await InvestmentModel.findById(data.id);
-//     socket.broadcast.emit("Withdrawal_request", investment);
-//   });
-// });
+io.on("connection", (socket) => {
+  socket.on("Withdrawal_request", async (data) => {
+    const investment = await InvestmentModel.findById(data.id);
+    socket.broadcast.emit("Withdrawal_request", investment);
+  });
+});
 
-// io.on("connection_failed", function () {
-//   io.emit("connection_failed_handler", "Socket connection failed");
-// });
+io.on("connection_failed", function () {
+  io.emit("connection_failed_handler", "Socket connection failed");
+});
 
-// io.on("error", function () {
-//   io.emit("error_handler", "Something went wrong with socket");
-// });
+io.on("error", function () {
+  io.emit("error_handler", "Something went wrong with socket");
+});
