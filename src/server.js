@@ -75,7 +75,9 @@ process.on("unhandledRejection", (err, promise) => {
   server.close(() => process.exit(1));
 });
 
-const io = new Server(httpServer);
+const io = new Server(httpServer, {
+  cors: corsOptions,
+});
 
 io.on("connection", (socket) => {
   socket.on("Withdrawal_request", async (data) => {
