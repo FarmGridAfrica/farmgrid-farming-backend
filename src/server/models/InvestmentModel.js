@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import Farm from "../models/FarmModel.js";
+import Farm from "./FarmModel.js";
 
 const InvestmentSchema = mongoose.Schema({
   user: {

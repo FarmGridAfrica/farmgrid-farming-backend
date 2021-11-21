@@ -1,5 +1,4 @@
 import express from "express";
-import path from "path";
 import dotenv from "dotenv";
 import connectDB from "./database/db.js";
 import colors from "colors";
@@ -8,8 +7,6 @@ import swaggerUI from "swagger-ui-express";
 import cors from "cors";
 import docs from "./docs/index.js";
 import { Server } from "socket.io";
-import http from "http";
-import Farm from "./server/models/FarmModel.js";
 import InvestmentModel from "./server/models/InvestmentModel.js";
 
 // const color = require('color');
