@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import Farm from "../models/FarmModel.js";
+// import Farm from "../models/FarmModel.js";
 
 const InvestmentSchema = mongoose.Schema({
   user: {
@@ -48,34 +48,34 @@ const InvestmentSchema = mongoose.Schema({
   },
 });
 
-InvestmentSchema.pre(/^(save)/, async function () {
-  let self = this;
-  let amount;
-  let dollarValue;
+// InvestmentSchema.pre(/^(save)/, async function () {
+//   let self = this;
+//   let amount;
+//   let dollarValue;
 
-  const farm = await Farm.findById(self.farm);
+//   const farm = await Farm.findById(self.farm);
 
-  amount = farm.amount * self.unit;
+//   amount = farm.amount * self.unit;
 
-  let exprtn = amount * (farm.annualPercentageYield * 0.01);
-  let exprtndol;
+//   let exprtn = amount * (farm.annualPercentageYield * 0.01);
+//   let exprtndol;
 
-  if (farm.country == "Kenya") {
-    dollarValue = Math.round(amount * 0.0089);
-    exprtndol = Math.round(exprtn * 0.0089);
-  } else if (farm.country == "Nigeria") {
-    dollarValue = Math.round(amount * 0.0024);
-    exprtndol = Math.round(exprtn * 0.0024);
-  } else {
-    dollarValue = Math.round(amount * 0.066);
-    exprtndol = Math.round(exprtn * 0.066);
-  }
+//   if (farm.country == "Kenya") {
+//     dollarValue = Math.round(amount * 0.0089);
+//     exprtndol = Math.round(exprtn * 0.0089);
+//   } else if (farm.country == "Nigeria") {
+//     dollarValue = Math.round(amount * 0.0024);
+//     exprtndol = Math.round(exprtn * 0.0024);
+//   } else {
+//     dollarValue = Math.round(amount * 0.066);
+//     exprtndol = Math.round(exprtn * 0.066);
+//   }
 
-  self.expectedReturn = amount + exprtn;
-  self.expectedReturnDollar = dollarValue + exprtndol;
-  self.amount = amount;
-  self.dollarEquivalent = dollarValue;
-});
+//   self.expectedReturn = amount + exprtn;
+//   self.expectedReturnDollar = dollarValue + exprtndol;
+//   self.amount = amount;
+//   self.dollarEquivalent = dollarValue;
+// });
 
 const Investment = mongoose.model("Investment", InvestmentSchema);
 export default Investment;
