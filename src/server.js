@@ -19,7 +19,6 @@ connectDB();
 
 //Routes files
 import users from "./server/routes/register.js";
-// import products from "./server/routes/product.js";
 import farms from "./server/routes/farm.js";
 import investments from "./server/routes/investment.js";
 import admins from "./server/routes/admin.js";
@@ -44,7 +43,6 @@ app.use(express.json());
 
 //Mount routers
 app.use("/api/v1/auth", users);
-// app.use("/api/v1/product", products);
 app.use("/api/v1/farm", farms);
 app.use("/api/v1/investment", investments);
 app.use("/api/v1/admin", admins);
